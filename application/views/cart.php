@@ -1,7 +1,7 @@
 
-<ul class="list-group">
+<ul class="animated shake list-group">
 <?php if( $this->session->userdata('table_name') != ''){ ?>
-	<li class="clearfix list-group-item item text-center"><?php echo $this->session->userdata('table_name'); ?></li>
+	<li class="clearfix list-group-item item text-center"><h3><?php echo $this->session->userdata('table_name'); ?></h3></li>
 <?php } ?>
 <?php 
 	$i = 1;

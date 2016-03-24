@@ -10,8 +10,8 @@ class Kitchen extends CI_Controller {
     }
 	
 	public function order(){
-		$out = '<div class="list-group">';
-		$out .= '<span class="list-group-item text-center">Orders</span>';
+		$out = '<div class="animated zoomInDown list-group">';
+		$out .= '<span class="list-group-item text-center"><h4>Orders</h4></span>';
 		$values = $this->DB->get('order');
 		foreach($values as $value){
 			$out .= '<a href="#" onclick="';
@@ -27,8 +27,8 @@ class Kitchen extends CI_Controller {
 		if($action == 'Searved'){
 			$this->DB->update( 'table', $time, array( "status"=>"Searved" ));
 		}
-		$out = '<ul class="list-group">';
-		$out .= '<li class="list-group-item text-center">Kitchen Copy <br/>'. mdate('%d/%m/%Y - %h:%i', gmt_to_local(time(), 'UP6', FALSE)) . '<hr/>' . $this->DB->get_relation('table',$time,'name') . '</li>';
+		$out = '<ul class="print_slip animated zoomInDown list-group">';
+		$out .= '<li class="list-group-item text-center">Kitchen Copy <br/><h4>' . $this->DB->get_relation('table',$time,'name') . '</h4>'. mdate('%d/%m/%Y - %h:%i', gmt_to_local(time(), 'UP6', FALSE)) . '</li>';
 		$values = $this->DB->get_where('order', array( 'time' => $time ));
 		
 		foreach($values as $value){

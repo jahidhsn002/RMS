@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 26, 2016 at 08:58 AM
+-- Generation Time: Mar 25, 2016 at 12:41 AM
 -- Server version: 10.1.9-MariaDB
 -- PHP Version: 5.6.15
 
@@ -38,9 +38,9 @@ CREATE TABLE `rt_goods` (
 --
 
 INSERT INTO `rt_goods` (`time`, `name`, `category`, `price`) VALUES
-('02541257', 'Chicken', 'Alo', '50'),
-('022354655', 'Kukra', 'Alo', '40'),
-('02645445784', 'Mora Masi', 'DFoll', '85');
+('02541257', 'Chicken', 'Alo', '46.5'),
+('1458847542', 'Hub Drive', 'ffff', '34'),
+('1458847607', 'rajesh', 'ffff', '67');
 
 -- --------------------------------------------------------
 
@@ -75,7 +75,13 @@ INSERT INTO `rt_order_history` (`time`, `Name`, `sale`) VALUES
 ('1458975973', 'Jamuna', '114'),
 ('1458976265', 'hgfhfgh', '535'),
 ('1458976620', 'ashiq rani', '198'),
-('1458977040', 'sdsadsa', '55');
+('1458977040', 'sdsadsa', '55'),
+('1458831634', 'gags', '190'),
+('1458831687', 'hdhsbfhmds dshfbd', '74'),
+('1458862170', 'Akash Khan', '83.3'),
+('1458862317', 'Korim Choudhori', '113.6'),
+('1458862447', 'Kali', '113.3'),
+('1458862500', 'my moni', '159.6');
 
 -- --------------------------------------------------------
 
@@ -95,8 +101,9 @@ CREATE TABLE `rt_stock` (
 --
 
 INSERT INTO `rt_stock` (`time`, `quantity`, `special`, `price`) VALUES
-('02541257', '0', 'True', '42'),
-('022354655', '14', 'False', '0');
+('02541257', '4', 'True', '12.3'),
+('1458847542', '18', 'False', '0'),
+('1458847607', '51', 'False', '0');
 
 -- --------------------------------------------------------
 
@@ -115,8 +122,10 @@ CREATE TABLE `rt_table` (
 --
 
 INSERT INTO `rt_table` (`time`, `name`, `status`) VALUES
-('025465445465', 'Apocalipso 05', 'Booked'),
-('02635544855', 'Apo Calipso Night 03', 'Free');
+('1458835592', 'Girls Mine', 'Free'),
+('1458835690', 'maine', 'Free'),
+('1458835710', 'Filmyh cafe', 'Free'),
+('1458835719', 'my Cafey', 'Free');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

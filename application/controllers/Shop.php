@@ -100,9 +100,9 @@ class Shop extends CI_Controller {
 
 		if( $this->DB->get_relation('table',$table,'status') == 'Free' ):
 			$goods = $_POST["goods"];
-			$out = '<ul class="list-group print">';
+			$out = '<ul class="print_slip animated zoomInDown list-group print">';
 			$items = array();
-			$out .= '<li class="list-group-item text-center">Kitchen Copy <br/>'. mdate('%d/%m/%Y - %h:%i', gmt_to_local(time(), 'UP6', FALSE)) . '<hr/>' . $this->DB->get_relation('table',$table,'name') . '</li>';
+			$out .= '<li class="list-group-item text-center">Kitchen Copy <h4>' . $this->DB->get_relation('table',$table,'name') . '</h4>'. mdate('%d/%m/%Y - %h:%i', gmt_to_local(time(), 'UP6', FALSE)) . '</li>';
 			foreach($goods as $good){
 				if($this->DB->get_relation('goods',$good[0],'name') != 'False'){
 					if( $this->DB->get_relation('stock',$good[0],'quantity') == 'False' || $this->DB->get_relation('stock',$good[0],'quantity') < $good[1]){

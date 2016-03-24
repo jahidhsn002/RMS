@@ -1,5 +1,9 @@
 <?php $this->load->view('header'); ?>
 <div class="show">
+	<div class="clearfix">
+		<br/>
+		<br/>
+	</div>
 	<div class="row">
 		<div class="col-sm-4 hide_print">
 			<div class="order">

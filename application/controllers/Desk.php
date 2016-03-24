@@ -10,8 +10,8 @@ class Desk extends CI_Controller {
     }
 	
 	public function order(){
-		$out = '<div class="list-group">';
-		$out .= '<span class="list-group-item text-center">Orders</span>';
+		$out = '<div class="animated zoomInDown list-group">';
+		$out .= '<span class="list-group-item text-center"><h4>Orders</h4></span>';
 		$values = $this->DB->get('order');
 		foreach($values as $value){
 			$out .= '<a href="#" onclick="';
@@ -24,11 +24,13 @@ class Desk extends CI_Controller {
     }
 	
 	public function view($time = null, $action = null){
-		$out = '<ul class="list-group">';
+		$out = '';
 		if($action == 'Complete' && isset($_GET['name']) && isset($_GET['commision'])){
-			$out .= '<li class="list-group-item text-center">Customer Copy <br/>'. mdate('%d/%m/%Y - %h:%i', gmt_to_local(time(), 'UP6', FALSE)) . '<hr/>' . $_GET['name'] . '</li>';
+			$out = '<ul class="print_slip animated zoomInDown list-group">';
+			$out .= '<li class="list-group-item text-center">Customer Copy <h4>' . $_GET['name'] . '</h4>'. mdate('%d/%m/%Y - %h:%i', gmt_to_local(time(), 'UP6', FALSE)) . '</li>';
 		}else{
-			$out .= '<li class="list-group-item text-center">'. $this->DB->get_relation('table',$time,'name') . '</li>';
+			$out = '<ul class="animated zoomInDown list-group">';
+			$out .= '<li class="list-group-item text-center"><h4>'. $this->DB->get_relation('table',$time,'name') . '</h4></li>';
 		}
 		$values = $this->DB->get_where('order', array( 'time' => $time ));
 		$total = 0;
@@ -53,7 +55,7 @@ class Desk extends CI_Controller {
 				$out .= '<span class="badge">Total = ' . $total  .' /-</span>';
 				$out .= '<a id="submit" href="#" onclick="" class="btn btn-sm btn-info">Searve</a>';
 			}else{
-				$out .= '<span class="badge">(Commision : ' . $_GET['commision'] . '/-) Total = ' . ($total-$_GET['commision'])  .' /-</span>';
+				$out .= '<span class="badge">Total = ' . ($total-$_GET['commision'])  .' /-</span> <span class="badge">( Commision : ' . $_GET['commision'] . '/- )</span>';
 			}
 		}
 		$out .= '</li></ul>';
