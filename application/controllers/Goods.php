@@ -1,76 +1,74 @@
 <?php
+	
 class Goods extends CI_Controller {
-	
-	public function __construct(){
-        parent::__construct();
+
+    public function index(){
+		$data['eror'] = '';
+		$data['tables'] = $this->DB->get('goods');
+		$this->load->view('goods/view',$data);
     }
-	
-	public function index(){
-		$this->load->view('goods');
-    }
-	
-	public function view($action = null, $time = null){
-		if($action == 'trash'){
-			$this->DB->trash('goods',$time);
-		}else if($action == 'update' && isset($_GET['price'])){
-			$this->DB->update('goods', $time, array('price'=>$_GET['price']));
-		}
-		$tables = $this->DB->get('goods');
-		$data = '<table class="table table-bordered"><thead>';
-		$data .= '<tr>';
-		$data .= '<th colspan="10" class="form-inline">';
-		if($action == 'change' && isset($_GET['price'])){
-			$data .= '<input type="number" value="'. $_GET['price'] .'" class="form-control" id="tbl_name"> <button onclick="';
-			$data .= "$('.the_form').load('" . site_url("Goods/view/update") . "/". $time ."?price=' + $('#tbl_name').val().replace(' ','%20'))";
-			$data .= '" class="btn btn-default">Change</button>';
-		}
-		$data .= '<a href="'. site_url("Goods/add") .'" class="btn btn-success pull-right">Add New</a>';
-		$data .= '</th>';
-		$data .= '</tr>';
-		$data .= '<tr>';
-		$data .= '<th>Name</th>';
-		$data .= '<th>Category</th>';
-		$data .= '<th>Price</th>';
-		$data .= '<th>Action</th>';
-		$data .= '</tr></thead>';
-		foreach($tables as $table){
-			$button = 	'<div class="dropdown pull-right">';
-			$button .= 	'<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Actions<span class="caret"></span></button>';
-			$button .= 	'<ul class="dropdown-menu">';
-			$button .= 	'<li><a onclick="';
-			$button .= 	"$('.the_form').load('" . site_url("Goods/view/change/" . $table->time) . "?price=". $table->price ."')";
-			$button .= 	'" href="#">Change Price</a></li>';
-			$button .= 	'<li><a onclick="';
-			$button .= 	"$('.the_form').load('" . site_url("Goods/view/trash/" . $table->time) . "')";
-			$button .= 	'" href="#">Delete</a></li>';
-			$button .= 	'</ul>';
-			$button .= 	'</div>';
-			
-			$data .= '<tr>';
-			$data .= '<td>'. $table->name .'</td>';
-			$data .= '<td>'. $table->category .'</td>';
-			$data .= '<td>'. $table->price .'</td>';
-			$data .= '<td>'. $button .'</td>';
-			$data .= '</tr>';
-		}
-		$data .= '</tbody></table>';
-		$this->_output($data);
-    }
-	
-	public function add(){
-		$this->form_validation->set_rules('name', 'Name', 'alpha_numeric_spaces|required');
-		$this->form_validation->set_rules('category', 'Category', 'alpha_numeric_spaces|required');
-		$this->form_validation->set_rules('price', 'Price', 'numeric|required');
+
+    public function add($id = ''){
+		
+		$this->form_validation->set_rules('action', 'Action', 'required|in_list[old,new]');
+		$this->form_validation->set_rules('name', 'Name', 'max_length[50]|required|regex_match[/^[-a-zA-Z0-9 ]*$/]');
+		$this->form_validation->set_rules('category', 'Category', 'max_length[50]|required|in_list[Filmy Food,Filmy Drinks,Bangla Tea,Hollywood Coffee,Dessert,Food papa Item,Regular Drinks,Tobacco]');
+		$this->form_validation->set_rules('print', 'Print Category', 'max_length[50]|required|in_list[Kitchen,Drinks,Food papa]');
+		$this->form_validation->set_rules('price', 'Price', 'max_length[20]|required|numeric');
+		
 		if ($this->form_validation->run() == FALSE){
-            $this->load->view('form_goods');
+            $data['eror'] = validation_errors();
+			$data['success'] = '';
+			$data['id'] = $id;
+			$this->load->view('goods/add',$data);
         }else{
-			$this->DB->insert('goods', array('time'=>time(), 'name'=>$_POST['name'], 'category'=>$_POST['category'], 'price'=>$_POST['price']));
-			$this->load->view('goods');
+			$data['id'] = $id;
+			if($_POST['action'] == 'new'){
+				$id = time();
+				$this->DB->insert('goods', array(
+					'time'=>$id,
+					'name'=>$_POST['name'],
+					'category'=>$_POST['category'],
+					'print'=>$_POST['print'],
+					'price'=>$_POST['price']
+				));
+				$this->DB->insert('stock', array('time'=>$id, 'quantity'=>0, 'special'=>'False', 'price'=> 0 ));
+				$data['eror'] = '';
+				$data['success'] = 'Food Added';
+			}else if($_POST['action'] == 'old'){
+				if($this->DB->get_relation('goods',$_POST['id'],'name') != 'False'){
+					$this->DB->update('goods', $_POST['id'], array(
+						'name'=>$_POST['name'],
+						'category'=>$_POST['category'],
+						'print'=>$_POST['print'],
+						'price'=>$_POST['price']
+					));
+					$data['id'] = $_POST['id'];
+					$data['eror'] = '';
+					$data['success'] = 'Food Updated';
+				}else{
+					$data['eror'] = 'Food Not Found';
+					$data['success'] = '';
+				}
+			}
+			$this->load->view('goods/add',$data);
         }
+	   
     }
 	
-	public function _output($output){
-        print_r( $output );
-	}
+	public function trash($id = ''){
+		$data['eror'] = '';
+		if($this->DB->get_relation('goods',$id,'name') != 'False'){
+			$this->DB->trash('goods',$id);
+			$this->DB->trash('stock',$id);
+			$data['eror'] = 'Food Deleted';
+		}else{
+			$data['eror'] = 'Food Not Found';
+		}
+		$data['tables'] = $this->DB->get('goods');
+		$this->load->view('goods/view',$data);
+    }
 	
 }
+	
+?>

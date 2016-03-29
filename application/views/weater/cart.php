@@ -1,8 +1,5 @@
 
-<ul class="animated shake list-group">
-<?php if( $this->session->userdata('table_name') != ''){ ?>
-	<li class="clearfix list-group-item item text-center"><h3><?php echo $this->session->userdata('table_name'); ?></h3></li>
-<?php } ?>
+<ul class="list-group">
 <?php 
 	$i = 1;
 	$goods = '[';
@@ -11,7 +8,7 @@
 <?php foreach ($this->cart->contents() as $items): ?>
 
         <li class="clearfix list-group-item item">
-                <a href="#" onclick="$('.order').load('<?php echo site_url('Shop/order/remove/'. $items['rowid']) .'/'. ( $items['qty']-1 ) ; ?>')" class="btn btn-sm btn-warning pull-right">Reduce</a>
+                <button type="button" onclick="$('.order').load('<?php echo site_url('weater/set/remove/'. $items['rowid']) .'/'. ( $items['qty']-1 ) ; ?>')" class="btn btn-sm btn-warning pull-right">Reduce</button>
 				<span>
                         <?php echo $items['name']; ?>
 
@@ -44,16 +41,16 @@
 	<li class="clearfix list-group-item item">
         <span><strong>Total</strong></span>
         <span class="badge"><?php echo $this->cart->format_number($this->cart->total()); ?></span>
-		<?php if( $this->session->userdata('table_name') != ''){ ?>
+		<?php if( $this->session->userdata('table_id') != ''){ ?>
 			<a href="#" onclick="complete()" class="btn btn-sm btn-success">Order</a> 
 		<?php } ?>
-		<a href="#" onclick="$('.order').load('<?php echo site_url('Shop/order/cancel'); ?>')" class="btn btn-sm btn-danger">Cancel</a>
+		<button type="button" onclick="$('.order').load('<?php echo site_url('weater/set/cancel'); ?>')" class="btn btn-sm btn-danger">Cancel</button>
 	</li>
 <?php endif; ?>
 </ul>
 <script>
 	function complete(){
-		$.post("<?php echo site_url('Shop/complete/'. $table ); ?>",
+		$.post("<?php echo site_url('weater/complete/'. $table ); ?>",
 		{
 			goods: <?php echo $goods; ?>
 		},

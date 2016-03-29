@@ -1,51 +1,68 @@
 <?php
+	
 class Table extends CI_Controller {
-	
-	public function __construct(){
-        parent::__construct();
+
+    public function index(){
+		$data['eror'] = '';
+		$data['tables'] = $this->DB->get('table');
+		$this->load->view('table/view',$data);
     }
-	
-	public function index(){
-		$this->load->view('table');
-    }
-	
-	public function view($action = null, $time = null){
-		if($action == 'trash'){
-			$this->DB->trash('table',$time);
-		}else if($action == 'add' && isset($_GET['name'])){
-			$this->DB->insert('table',array('time'=>time(),'name'=>$_GET['name'],'status'=>'Free'));
-		}
-		$tables = $this->DB->get('table');
-		$data = '<table class="table table-bordered"><thead>';
-		$data .= '<tr>';
-		$data .= '<th class="form-inline"><input type="text" class="form-control" id="tbl_name"><button onclick="';
-		$data .= "$('.the_form').load('" . site_url("Table/view/add") . "?name=' + $('#tbl_name').val().replace(' ','%20'))";
-		$data .= '" class="btn btn-default">Add New</button></th>';
-		$data .= '</tr>';
-		$data .= '</thead>';
-		foreach($tables as $table){
-			if($table->status == 'Free'){
-				$button = 	'<div class="dropdown pull-right">';
-				$button .= 	'<button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Actions<span class="caret"></span></button>';
-				$button .= 	'<ul class="dropdown-menu">';
-				$button .= 	'<li><a onclick="';
-				$button .= 	"$('.the_form').load('" . site_url("Table/view/trash/" . $table->time) . "')";
-				$button .= 	'" href="#">Delete</a></li>';
-				$button .= 	'</ul>';
-				$button .= 	'</div>';
-			}else{
-				$button = '<div class="label label-danger pull-right">' . $table->status . '</div>';
+
+    public function add($id = ''){
+		
+		$this->form_validation->set_rules('action', 'Action', 'required|in_list[old,new]');
+		$this->form_validation->set_rules('number', 'Name', 'max_length[20]|required|numeric');
+		$this->form_validation->set_rules('name', 'Name', 'max_length[50]|required|regex_match[/^[-a-zA-Z0-9 ]*$/]');
+		
+		if ($this->form_validation->run() == FALSE){
+            $data['eror'] = validation_errors();
+			$data['success'] = '';
+			$data['id'] = $id;
+			$this->load->view('table/add',$data);
+        }else{
+			$data['id'] = $id;
+			if($_POST['action'] == 'new'){
+				$id = time();
+				$this->DB->insert('table', array(
+					'time'=>$id,
+					'number'=>$_POST['number'],
+					'name'=>$_POST['name'],
+					'status'=>'Free'
+				));
+				$data['eror'] = '';
+				$data['success'] = 'Food Added';
+			}else if($_POST['action'] == 'old'){
+				if($this->DB->get_relation('table',$_POST['id'],'name') != 'False'){
+					$this->DB->update('table', $_POST['id'], array(
+						'number'=>$_POST['number'],
+						'name'=>$_POST['name']
+					));
+					$data['id'] = $_POST['id'];
+					$data['eror'] = '';
+					$data['success'] = 'Food Updated';
+				}else{
+					$data['eror'] = 'Food Not Found';
+					$data['success'] = '';
+				}
 			}
-			$data .= '<tr>';
-			$data .= '<td>'. $table->name . $button .'</td>';
-			$data .= '</tr>';
-		}
-		$data .= '</tbody></table>';
-		$this->_output($data);
+			$this->load->view('table/add',$data);
+        }
+	   
     }
 	
-	public function _output($output){
-        print_r( $output );
-	}
+	public function trash($id = ''){
+		$data['eror'] = '';
+		if($this->DB->get_relation('table',$id,'name') != 'False'){
+			$this->DB->trash('table',$id);
+			$this->DB->trash('order',$id);
+			$data['eror'] = 'Food Deleted';
+		}else{
+			$data['eror'] = 'Food Not Found';
+		}
+		$data['tables'] = $this->DB->get('table');
+		$this->load->view('table/view',$data);
+    }
 	
 }
+	
+?>

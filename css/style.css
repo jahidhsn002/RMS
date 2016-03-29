@@ -1,47 +1,42 @@
-@media print{
-	.hide_print{display:none;}
-	.print{display:block !important;max-width:200px;}
-}
-
-nav.nav {
-    position: fixed;
-    bottom: 5px;
-    left: 5px;
-    z-index: 5000;
-}
-
 body {
     background-image: url('../images/back.jpg');
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 	min-height: 100vh;
-	overflow: hidden;
+	overflow-x: hidden;
 }
 
-.container {
-    background-color: rgba(225, 51, 0, 0.42);
-    min-height: 100vh;
+#main{
+	background-color: #eeeeee;
+	padding:10px;
 }
 
-h1.main_title {
-    color: #ffffff;
-    font-size: 400%;
+#main .form{
+	max-width:300px;
+	margin:auto;
+}
+
+#main .table {
+    background: #ffffff;
+}
+
+#main .table tbody tr td {
+    cursor: pointer;
+}
+
+#main .order_table {
+    display: block;
+    background: #ffffff;
+    padding: 20px;
     text-align: center;
-    margin-top: 150px;
+    color: #444444;
+    text-decoration: none;
+    border-radius: 1000px;
+    min-height: 200px;
+	line-height: 40px;
 }
 
-.box{
-	position: absolute;
-    margin-left: 10px;
-    margin-top: 50px;
-	z-index: 5000;
-}
-
-.index{
-	z-index: 5050;
-}
-
-.print_slip{
-	max-width: 300px;
-	margin: auto;
+#main #food_item {
+    position: absolute;
+	z-index:500;
 }
