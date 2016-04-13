@@ -23,14 +23,14 @@
 			<tr>
 				<th>Name</th>
 				<th>Quantity</th>
-				<th>Cost</th>
+				<th>Price</th>
 				<th>Action</th>
 			</tr>
 			</thead>
 			<tbody>
 	<?php foreach($datas as $data): ?>
 			<tr>
-				<td><?php echo $this->Db->get_relation('food', $data->time, 'name'); ?></td>
+				<td><?php echo $this->Db->get_relation('material', $data->time, 'name'); ?></td>
 				<td><?php echo $data->quantity; ?></td>
 				<td><?php echo $data->price; ?></td>
 				<td class="">
@@ -39,14 +39,8 @@
 					Actions <span class="caret"></span></button>
 					<ul class="dropdown-menu" role="menu">
 						<li>
-							<?php echo form_open('stock/wastage_change/'. $data->time, array('class'=>'form form-inline')); ?>
+							<?php echo form_open('prestock/wastage_change/'. $data->time, array('class'=>'form form-inline')); ?>
 								<input type="text" style='width:100px;height:30px;' placeholder="wastage" name="qty" class="form-control">
-								<button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
-							</form>
-						</li>
-						<li>
-							<?php echo form_open('stock/premade_change/'. $data->time, array('class'=>'form form-inline')); ?>
-								<input type="text" style='width:100px;height:30px;' placeholder="premade" name="qty" class="form-control">
 								<button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
 							</form>
 						</li>

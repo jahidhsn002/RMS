@@ -1,5 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Table extends CI_Controller {
+
+class User extends CI_Controller {
 
     public function index(){
 		
@@ -15,10 +16,10 @@ class Table extends CI_Controller {
 		$data['Success'] = null;
 		if(isset($_GET['Success'])){$data['Success'] = $_GET['Success'];}
 		if(isset($_GET['Eror'])){$data['Eror'] = $_GET['Eror'];}
-		$data['datas'] = $this->Db->get('table');
+		$data['datas'] = $this->Db->get('user');
 		
         $this->load->view('theme/header',$data);
-		$this->load->view('table/view',$data);
+		$this->load->view('user/view',$data);
 		$this->load->view('theme/footer',$data);
     }
 	
@@ -31,12 +32,15 @@ class Table extends CI_Controller {
 			if(!in_array('option', $access)){ show_404(); }
 		}else{ show_404(); }
 		
-		$this->form_validation->set_rules('number', 'Number', 		'required|numeric|max_length[20]'	);
-		$this->form_validation->set_rules('name', 'Name', 		'required|regex_match[/^[-a-zA-Z ]*$/]|max_length[50]'	);
-
+		$this->form_validation->set_rules('name', 'Name', 				'required|regex_match[/^[-a-zA-Z ]*$/]|max_length[50]'	);
+		$this->form_validation->set_rules('designation', 'Dasignation', 'required|regex_match[/^[-a-zA-Z ]*$/]|max_length[50]'	);
+		$this->form_validation->set_rules('username', 'Email', 			'required|valid_email|max_length[50]'	);
+		$this->form_validation->set_rules('password', 'Password', 		'required|regex_match[/^[-a-zA-Z0-9 ]*$/]|max_length[50]'	);
+		
 		$data['Eror'] = null;
-		$data['Back'] = 'table';
+		$data['Back'] = 'user';
 		$data['Success'] = null;
+		$data['rolls'] = $this->Db->get('module');
 		
 		if ($this->form_validation->run() == FALSE){
             $data['Eror'] = validation_errors();
@@ -44,10 +48,13 @@ class Table extends CI_Controller {
 			$id = time();
 			$array = array(
 				'time' => $id,
-				'number' => $_POST['number'],
-				'name' => $_POST['name']
+				'name' => $_POST['name'],
+				'designation' => $_POST['designation'],
+				'username' => $_POST['username'],
+				'password' => md5($_POST['password']),
+				'roll' => implode('|', $_POST['roll'])
 			);
-			$msg = $this->Db->insert('table',$array);
+			$msg = $this->Db->insert('user',$array);
             if($msg == 'True'){
 				$data['Success'] = 'Table Added';
 			}else{
@@ -56,7 +63,7 @@ class Table extends CI_Controller {
 		}
 		
 		$this->load->view('theme/header',$data);
-		$this->load->view('table/add',$data);
+		$this->load->view('user/add',$data);
 		$this->load->view('theme/footer',$data);
 		
     }
@@ -70,22 +77,28 @@ class Table extends CI_Controller {
 			if(!in_array('option', $access)){ show_404(); }
 		}else{ show_404(); }
 		
-		$this->form_validation->set_rules('number', 'Number', 	'required|numeric|max_length[20]'	);
-		$this->form_validation->set_rules('name', 'Name', 		'required|regex_match[/^[-a-zA-Z ]*$/]|max_length[50]'	);
-
+		$this->form_validation->set_rules('name', 'Name', 				'required|regex_match[/^[-a-zA-Z ]*$/]|max_length[50]'	);
+		$this->form_validation->set_rules('designation', 'Dasignation', 'required|regex_match[/^[-a-zA-Z ]*$/]|max_length[50]'	);
+		$this->form_validation->set_rules('username', 'Email', 			'required|valid_email|max_length[50]'	);
+		$this->form_validation->set_rules('password', 'Password', 		'required|regex_match[/^[-a-zA-Z0-9 ]*$/]|max_length[50]'	);
+		
 		$data['Eror'] = null;
-		$data['Back'] = 'table';
+		$data['Back'] = 'user';
 		$data['Success'] = null;
+		$data['rolls'] = $this->Db->get('module');
 		
 		if ($this->form_validation->run() == FALSE){
             $data['Eror'] = validation_errors();
         }else{
-			if($this->Db->get_relation('table', $time, 'name') != 'False'){
+			if($this->Db->get_relation('user', $time, 'name') != 'False'){
 				$array = array(
-					'number' => $_POST['number'],
-					'name' => $_POST['name']
+					'name' => $_POST['name'],
+					'designation' => $_POST['designation'],
+					'username' => $_POST['username'],
+					'password' => md5($_POST['password']),
+					'roll' => implode('|', $_POST['roll'])
 				);
-				$msg = $this->Db->update('table', $_POST['time'], $array);
+				$msg = $this->Db->update('user', $_POST['time'], $array);
 				if($msg == 'True'){
 					$data['Success'] = 'Table Edited';
 				}else{
@@ -99,7 +112,7 @@ class Table extends CI_Controller {
 		$data['time'] = $time;
 		
 		$this->load->view('theme/header', $data);
-		$this->load->view('table/edit', $data);
+		$this->load->view('user/edit', $data);
 		$this->load->view('theme/footer', $data);
 		
     }
@@ -125,15 +138,15 @@ class Table extends CI_Controller {
 		if ($this->form_validation->run() == FALSE){
 			$data['Eror'] = validation_errors();
         }else{
-			$msg = $this->Db->trash('table', $time);
+			$msg = $this->Db->trash('user', $time);
 			if($msg == 'True'){
 				$data['Success'] = 'Deleted';
-				redirect('table?Success='. $data['Success'] , 'refresh');
+				redirect('user?Success='. $data['Success'] , 'refresh');
 			}else{
 				$data['Eror'] = $msg;
 			}
 		}
-		redirect('table?Eror='. $data['Eror'] , 'refresh');
+		redirect('user?Eror='. $data['Eror'] , 'refresh');
     }
 
 }

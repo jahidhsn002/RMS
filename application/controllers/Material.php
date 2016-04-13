@@ -1,5 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Table extends CI_Controller {
+class Material extends CI_Controller {
 
     public function index(){
 		
@@ -7,7 +7,7 @@ class Table extends CI_Controller {
 			$session_data = $this->session->userdata('he645200_on');
 			$id = $session_data['id']; $data['id'] = $id;
 			$access = explode('|', $this->Db->get_relation('user', $id, 'roll'));
-			if(!in_array('option', $access)){ show_404(); }
+			if(!in_array('perchase/material', $access)){ show_404(); }
 		}else{ show_404(); }
 		
 		$data['Eror'] = null;
@@ -15,10 +15,10 @@ class Table extends CI_Controller {
 		$data['Success'] = null;
 		if(isset($_GET['Success'])){$data['Success'] = $_GET['Success'];}
 		if(isset($_GET['Eror'])){$data['Eror'] = $_GET['Eror'];}
-		$data['datas'] = $this->Db->get('table');
+		$data['datas'] = $this->Db->get('material');
 		
         $this->load->view('theme/header',$data);
-		$this->load->view('table/view',$data);
+		$this->load->view('material/view',$data);
 		$this->load->view('theme/footer',$data);
     }
 	
@@ -28,14 +28,15 @@ class Table extends CI_Controller {
 			$session_data = $this->session->userdata('he645200_on');
 			$id = $session_data['id']; $data['id'] = $id;
 			$access = explode('|', $this->Db->get_relation('user', $id, 'roll'));
-			if(!in_array('option', $access)){ show_404(); }
+			if(!in_array('perchase/material', $access)){ show_404(); }
 		}else{ show_404(); }
 		
-		$this->form_validation->set_rules('number', 'Number', 		'required|numeric|max_length[20]'	);
-		$this->form_validation->set_rules('name', 'Name', 		'required|regex_match[/^[-a-zA-Z ]*$/]|max_length[50]'	);
-
+		$this->form_validation->set_rules('name', 'Name', 'max_length[50]|required|regex_match[/^[-a-zA-Z0-9 ]*$/]');
+		$this->form_validation->set_rules('category', 'Category', 'max_length[50]|required|in_list[Filmy Food,Filmy Drinks,Bangla Tea,Hollywood Coffee,Dessert,Food papa Item,Regular Drinks,Tobacco]');
+		$this->form_validation->set_rules('price', 'Price', 'max_length[20]|required|numeric');
+		
 		$data['Eror'] = null;
-		$data['Back'] = 'table';
+		$data['Back'] = 'material';
 		$data['Success'] = null;
 		
 		if ($this->form_validation->run() == FALSE){
@@ -44,19 +45,28 @@ class Table extends CI_Controller {
 			$id = time();
 			$array = array(
 				'time' => $id,
-				'number' => $_POST['number'],
-				'name' => $_POST['name']
+				'name' => $_POST['name'],
+				'category' => $_POST['category'],
+				'price' => $_POST['price']
 			);
-			$msg = $this->Db->insert('table',$array);
-            if($msg == 'True'){
-				$data['Success'] = 'Table Added';
+			$msg = $this->Db->insert('material',$array);
+			$array2 = array(
+				'time' => $id,
+				'quantity' => 0,
+				'wastage' => 0
+			);
+			$msg2 = $this->Db->insert('prestock',$array2);
+            if($msg == 'True' && $msg2 == 'True'){
+				$data['Success'] = 'Material Added';
 			}else{
 				$data['Eror'] = $msg;
 			}
 		}
 		
+		
+		$data['datas'] = $this->Db->get('material');
 		$this->load->view('theme/header',$data);
-		$this->load->view('table/add',$data);
+		$this->load->view('material/add',$data);
 		$this->load->view('theme/footer',$data);
 		
     }
@@ -67,39 +77,42 @@ class Table extends CI_Controller {
 			$session_data = $this->session->userdata('he645200_on');
 			$id = $session_data['id']; $data['id'] = $id;
 			$access = explode('|', $this->Db->get_relation('user', $id, 'roll'));
-			if(!in_array('option', $access)){ show_404(); }
+			if(!in_array('perchase/material', $access)){ show_404(); }
 		}else{ show_404(); }
 		
-		$this->form_validation->set_rules('number', 'Number', 	'required|numeric|max_length[20]'	);
-		$this->form_validation->set_rules('name', 'Name', 		'required|regex_match[/^[-a-zA-Z ]*$/]|max_length[50]'	);
-
+		$this->form_validation->set_rules('name', 'Name', 'max_length[50]|required|regex_match[/^[-a-zA-Z0-9 ]*$/]');
+		$this->form_validation->set_rules('category', 'Category', 'max_length[50]|required|in_list[Filmy Food,Filmy Drinks,Bangla Tea,Hollywood Coffee,Dessert,Food papa Item,Regular Drinks,Tobacco]');
+		$this->form_validation->set_rules('price', 'Price', 'max_length[20]|required|numeric');
+		
 		$data['Eror'] = null;
-		$data['Back'] = 'table';
+		$data['Back'] = 'material';
 		$data['Success'] = null;
 		
 		if ($this->form_validation->run() == FALSE){
             $data['Eror'] = validation_errors();
         }else{
-			if($this->Db->get_relation('table', $time, 'name') != 'False'){
+			if($this->Db->get_relation('material', $time, 'name') != 'False'){
 				$array = array(
-					'number' => $_POST['number'],
-					'name' => $_POST['name']
+					'name' => $_POST['name'],
+					'category' => $_POST['category'],
+					'price' => $_POST['price']
 				);
-				$msg = $this->Db->update('table', $_POST['time'], $array);
+				$msg = $this->Db->update('material', $_POST['time'], $array);
 				if($msg == 'True'){
-					$data['Success'] = 'Table Edited';
+					$data['Success'] = 'Material Edited';
 				}else{
 					$data['Eror'] = $msg;
 				}
 			}else{
-				$data['Eror'] = 'Table ID not found';
+				$data['Eror'] = 'Material ID not found';
 			}
 		}
 		
 		$data['time'] = $time;
 		
+		$data['datas'] = $this->Db->get('material');
 		$this->load->view('theme/header', $data);
-		$this->load->view('table/edit', $data);
+		$this->load->view('material/edit', $data);
 		$this->load->view('theme/footer', $data);
 		
     }
@@ -110,7 +123,7 @@ class Table extends CI_Controller {
 			$session_data = $this->session->userdata('he645200_on');
 			$id = $session_data['id']; $data['id'] = $id;
 			$access = explode('|', $this->Db->get_relation('user', $id, 'roll'));
-			if(!in_array('option', $access)){ show_404(); }
+			if(!in_array('perchase/material', $access)){ show_404(); }
 		}else{ show_404(); }
 		
 		$data['Eror'] = null;
@@ -125,15 +138,16 @@ class Table extends CI_Controller {
 		if ($this->form_validation->run() == FALSE){
 			$data['Eror'] = validation_errors();
         }else{
-			$msg = $this->Db->trash('table', $time);
-			if($msg == 'True'){
+			$msg = $this->Db->trash('material', $time);
+			$msg2 = $this->Db->trash('prestock', $time);
+			if($msg == 'True' && $msg2 == 'True'){
 				$data['Success'] = 'Deleted';
-				redirect('table?Success='. $data['Success'] , 'refresh');
+				redirect('material?Success='. $data['Success'] , 'refresh');
 			}else{
 				$data['Eror'] = $msg;
 			}
 		}
-		redirect('table?Eror='. $data['Eror'] , 'refresh');
+		redirect('material?Eror='. $data['Eror'] , 'refresh');
     }
 
 }

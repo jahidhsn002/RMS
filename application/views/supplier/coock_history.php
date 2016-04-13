@@ -2,7 +2,7 @@
 <main id="content">
 	
 	<div class="component">
-		<h4 class="text-center">Table</h4>
+		<h4 class="text-center">Coock History</h4>
 		<?php 
 			if($Eror != null){
 				echo '<div class="alert alert-danger fade in">
@@ -20,23 +20,28 @@
 		<table id="table" class="table">
 			<thead>
 			<tr>
-				<th colspan="3"><a class="btn btn-success btn-sm" href="<?php echo site_url('table/add'); ?>">Add Table</a></th>
-			</tr>
-			<tr>
-				<th>Number</th>
-				<th>Name</th>
-				<th>Action</th>
+				<th>Date</th>
+				<th>Food</th>
+				<th>Quantity(kg)</th>
+				<th>Total(kg)</th>
+				<th>Material</th>
 			</tr>
 			</thead>
 			<tbody>
 	<?php foreach($datas as $data): ?>
 			<tr>
-				<td><?php echo $data->number; ?></td>
-				<td><?php echo $data->name; ?></td>
-				<td class="text-right">
-					<a class="btn btn-sm btn-info" href="<?php echo site_url( 'table/edit/'. $data->time ); ?>"><span class="glyphicon glyphicon-cog"></span></a>
-					<a class="btn btn-sm btn-danger" href="<?php echo site_url( 'table/trash/'. $data->time ); ?>"><span class="glyphicon glyphicon-trash"></span></a>
-				</td>
+				<td><b><?php echo mdate('%m/%d/%Y (%h:%i)', gmt_to_local($data->time, 'UP6', FALSE)); ?></b></td>
+				<td><?php echo $this->Db->get_relation('food', $data->food, 'name'); ?></td>
+				<td><?php echo $data->food_qty; ?></td>
+				<td><?php echo $data->total; ?></td>
+				<td><?php 
+					$material = explode('|',$data->material);
+					$qty = explode('|',$data->qty);
+					for($i = 0; $i < count($material); $i++){
+						echo $this->Db->get_relation('Material', $material[$i], 'name');
+						echo '(' . $qty[$i] . ') ';
+					}
+				?></td>
 			</tr>
 	<?php endforeach; ?>
 			</tbody>

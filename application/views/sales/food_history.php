@@ -2,7 +2,7 @@
 <main id="content">
 	
 	<div class="component">
-		<h4 class="text-center">Table</h4>
+		<h4 class="text-center">Food History</h4>
 		<?php 
 			if($Eror != null){
 				echo '<div class="alert alert-danger fade in">
@@ -20,23 +20,32 @@
 		<table id="table" class="table">
 			<thead>
 			<tr>
-				<th colspan="3"><a class="btn btn-success btn-sm" href="<?php echo site_url('table/add'); ?>">Add Table</a></th>
-			</tr>
-			<tr>
+				<th>Date</th>
 				<th>Number</th>
-				<th>Name</th>
-				<th>Action</th>
+				<th>Table</th>
+				<th>Food</th>
+				<th>Bill</th>
+				<th>Paid</th>
+				<th>Profit</th>
 			</tr>
 			</thead>
 			<tbody>
 	<?php foreach($datas as $data): ?>
 			<tr>
-				<td><?php echo $data->number; ?></td>
-				<td><?php echo $data->name; ?></td>
-				<td class="text-right">
-					<a class="btn btn-sm btn-info" href="<?php echo site_url( 'table/edit/'. $data->time ); ?>"><span class="glyphicon glyphicon-cog"></span></a>
-					<a class="btn btn-sm btn-danger" href="<?php echo site_url( 'table/trash/'. $data->time ); ?>"><span class="glyphicon glyphicon-trash"></span></a>
-				</td>
+				<td><b><?php echo mdate('%m/%d/%Y', gmt_to_local($data->time, 'UP6', FALSE)); ?></b></td>
+				<td><?php echo $data->table_no; ?></td>
+				<td><?php echo $data->table; ?></td>
+				<td><?php 
+					$material = explode('|',$data->food);
+					$qty = explode('|',$data->quantity);
+					for($i = 0; $i < count($material); $i++){
+						echo $this->Db->get_relation('food', $material[$i], 'name');
+						echo '(' . $qty[$i] . ') ';
+					}
+				?></td>
+				<td><?php echo $data->bill; ?></td>
+				<td><?php echo $data->paid; ?></td>
+				<td><?php echo $data->profit; ?></td>
 			</tr>
 	<?php endforeach; ?>
 			</tbody>

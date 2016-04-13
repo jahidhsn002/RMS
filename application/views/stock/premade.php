@@ -2,7 +2,7 @@
 <main id="content">
 	
 	<div class="component">
-		<h4 class="text-center">Table</h4>
+		<h4 class="text-center">Premade Stock</h4>
 		<?php 
 			if($Eror != null){
 				echo '<div class="alert alert-danger fade in">
@@ -17,25 +17,27 @@
 				</div>';	
 			}
 		?>
+		
 		<table id="table" class="table">
 			<thead>
 			<tr>
-				<th colspan="3"><a class="btn btn-success btn-sm" href="<?php echo site_url('table/add'); ?>">Add Table</a></th>
-			</tr>
-			<tr>
-				<th>Number</th>
 				<th>Name</th>
+				<th>Quantity</th>
+				<th>Cost</th>
 				<th>Action</th>
 			</tr>
 			</thead>
 			<tbody>
 	<?php foreach($datas as $data): ?>
 			<tr>
-				<td><?php echo $data->number; ?></td>
-				<td><?php echo $data->name; ?></td>
-				<td class="text-right">
-					<a class="btn btn-sm btn-info" href="<?php echo site_url( 'table/edit/'. $data->time ); ?>"><span class="glyphicon glyphicon-cog"></span></a>
-					<a class="btn btn-sm btn-danger" href="<?php echo site_url( 'table/trash/'. $data->time ); ?>"><span class="glyphicon glyphicon-trash"></span></a>
+				<td><?php echo $this->Db->get_relation('food', $data->time, 'name'); ?></td>
+				<td><?php echo $data->premade; ?></td>
+				<td><?php echo $data->price; ?></td>
+				<td>
+					<?php echo form_open('stock/premade_change/'. $data->time, array('class'=>'form form-inline')); ?>
+						<input type="text" style='width:50px;height:20px;' placeholder="wtg" name="qty" class="form-control">
+						<button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+					</form>
 				</td>
 			</tr>
 	<?php endforeach; ?>

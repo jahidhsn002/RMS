@@ -3,7 +3,7 @@
 <main id="content">
 	
 	<div class="form">
-		<h4 class="text-center">Add Table</h4>
+		<h4 class="text-center">Add Material</h4>
 		<?php 
 			if($Eror != null){
 				echo '<div class="alert alert-danger fade in">
@@ -19,19 +19,39 @@
 			}
 		 ?>
 
-		<?php echo form_open('table/add'); ?>
+		<?php echo form_open('material/add'); ?>
 			
 			<div class="form-group">
 				<div class="input-group">
-					<span class="input-group-addon">Number</span>
-					<input type="number" name="number" class="form-control">
+					<div class="input-group-addon">Name</div>
+					<input type="text" value="" name="name" class="form-control" id="Name">
 				</div>
 			</div>
 			
 			<div class="form-group">
+				<div class="input-group ui-widget">
+					<div class="input-group-addon">Category</div>
+					<select name="category" id="combobox" class="form-control">
+						<?php 
+						$cat = 'cc_xx';
+						foreach($datas as $data): 
+							if($cat != $data->category):
+								$cat = $data->category;
+								echo '<option>';
+								echo $cat;
+								echo '</option>';
+							endif;
+						endforeach;
+						?>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
 				<div class="input-group">
-					<span class="input-group-addon">Name</span>
-					<input type="text" name="name" class="form-control">
+					<div class="input-group-addon">Price</div>
+					<input name="price" value="" type="number" class="form-control" id="Price">
+					<div class="input-group-addon">.00</div>
 				</div>
 			</div>
 	

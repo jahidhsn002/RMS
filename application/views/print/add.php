@@ -19,14 +19,7 @@
 			}
 		 ?>
 
-		<?php echo form_open('table/add'); ?>
-			
-			<div class="form-group">
-				<div class="input-group">
-					<span class="input-group-addon">Number</span>
-					<input type="number" name="number" class="form-control">
-				</div>
-			</div>
+		<?php echo form_open('catprint/add'); ?>
 			
 			<div class="form-group">
 				<div class="input-group">

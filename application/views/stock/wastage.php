@@ -2,7 +2,7 @@
 <main id="content">
 	
 	<div class="component">
-		<h4 class="text-center">Table</h4>
+		<h4 class="text-center">Wastage</h4>
 		<?php 
 			if($Eror != null){
 				echo '<div class="alert alert-danger fade in">
@@ -17,26 +17,19 @@
 				</div>';	
 			}
 		?>
+		
 		<table id="table" class="table">
 			<thead>
 			<tr>
-				<th colspan="3"><a class="btn btn-success btn-sm" href="<?php echo site_url('table/add'); ?>">Add Table</a></th>
-			</tr>
-			<tr>
-				<th>Number</th>
 				<th>Name</th>
-				<th>Action</th>
+				<th>Wastage</th>
 			</tr>
 			</thead>
 			<tbody>
 	<?php foreach($datas as $data): ?>
 			<tr>
-				<td><?php echo $data->number; ?></td>
-				<td><?php echo $data->name; ?></td>
-				<td class="text-right">
-					<a class="btn btn-sm btn-info" href="<?php echo site_url( 'table/edit/'. $data->time ); ?>"><span class="glyphicon glyphicon-cog"></span></a>
-					<a class="btn btn-sm btn-danger" href="<?php echo site_url( 'table/trash/'. $data->time ); ?>"><span class="glyphicon glyphicon-trash"></span></a>
-				</td>
+				<td><?php echo $this->Db->get_relation('food', $data->time, 'name'); ?></td>
+				<td><?php echo $data->wastage; ?></td>
 			</tr>
 	<?php endforeach; ?>
 			</tbody>

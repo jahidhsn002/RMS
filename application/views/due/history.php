@@ -2,7 +2,7 @@
 <main id="content">
 	
 	<div class="component">
-		<h4 class="text-center">Table</h4>
+		<h4 class="text-center">Due History</h4>
 		<?php 
 			if($Eror != null){
 				echo '<div class="alert alert-danger fade in">
@@ -17,26 +17,27 @@
 				</div>';	
 			}
 		?>
+		
 		<table id="table" class="table">
 			<thead>
 			<tr>
-				<th colspan="3"><a class="btn btn-success btn-sm" href="<?php echo site_url('table/add'); ?>">Add Table</a></th>
-			</tr>
-			<tr>
-				<th>Number</th>
-				<th>Name</th>
-				<th>Action</th>
+				<th>Date</th>
+				<th>ID</th>
+				<th>Supplier</th>
+				<th>Company</th>
+				<th>Bill</th>
+				<th>Paid</th>
 			</tr>
 			</thead>
 			<tbody>
 	<?php foreach($datas as $data): ?>
 			<tr>
-				<td><?php echo $data->number; ?></td>
-				<td><?php echo $data->name; ?></td>
-				<td class="text-right">
-					<a class="btn btn-sm btn-info" href="<?php echo site_url( 'table/edit/'. $data->time ); ?>"><span class="glyphicon glyphicon-cog"></span></a>
-					<a class="btn btn-sm btn-danger" href="<?php echo site_url( 'table/trash/'. $data->time ); ?>"><span class="glyphicon glyphicon-trash"></span></a>
-				</td>
+				<td><b><?php echo mdate('%d/%m/%Y', gmt_to_local($data->time, 'UP6', FALSE)); ?></b></td>
+				<td><?php echo $data->supplier; ?></td>
+				<td><?php echo $this->Db->get_relation('supplier', $data->supplier, 'name'); ?></td>
+				<td><?php echo $this->Db->get_relation('supplier', $data->supplier, 'company'); ?></td>
+				<td><?php echo $data->bill; ?></td>
+				<td><?php echo $data->paid; ?></td>
 			</tr>
 	<?php endforeach; ?>
 			</tbody>

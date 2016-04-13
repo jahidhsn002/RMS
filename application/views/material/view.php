@@ -2,7 +2,7 @@
 <main id="content">
 	
 	<div class="component">
-		<h4 class="text-center">Table</h4>
+		<h4 class="text-center">Materials</h4>
 		<?php 
 			if($Eror != null){
 				echo '<div class="alert alert-danger fade in">
@@ -20,22 +20,24 @@
 		<table id="table" class="table">
 			<thead>
 			<tr>
-				<th colspan="3"><a class="btn btn-success btn-sm" href="<?php echo site_url('table/add'); ?>">Add Table</a></th>
+				<th colspan="8"><a class="btn btn-success btn-sm" href="<?php echo site_url('material/add'); ?>">Add Material</a></th>
 			</tr>
 			<tr>
-				<th>Number</th>
 				<th>Name</th>
+				<th>Category</th>
+				<th>Price</th>
 				<th>Action</th>
 			</tr>
 			</thead>
 			<tbody>
 	<?php foreach($datas as $data): ?>
 			<tr>
-				<td><?php echo $data->number; ?></td>
 				<td><?php echo $data->name; ?></td>
+				<td><?php echo $data->category; ?></td>
+				<td><?php echo $data->price; ?></td>
 				<td class="text-right">
-					<a class="btn btn-sm btn-info" href="<?php echo site_url( 'table/edit/'. $data->time ); ?>"><span class="glyphicon glyphicon-cog"></span></a>
-					<a class="btn btn-sm btn-danger" href="<?php echo site_url( 'table/trash/'. $data->time ); ?>"><span class="glyphicon glyphicon-trash"></span></a>
+					<a class="btn btn-sm btn-info" href="<?php echo site_url( 'material/edit/'. $data->time ); ?>"><span class="glyphicon glyphicon-cog"></span></a>
+					<a class="btn btn-sm btn-danger" href="<?php echo site_url( 'material/trash/'. $data->time ); ?>"><span class="glyphicon glyphicon-trash"></span></a>
 				</td>
 			</tr>
 	<?php endforeach; ?>
